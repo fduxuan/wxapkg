@@ -8,17 +8,19 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/fatih/color"
-	"github.com/spf13/cobra"
-	"github.com/wux1an/wxapkg/util"
-	"golang.org/x/crypto/pbkdf2"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"sort"
 	"sync"
+
+	"github.com/fatih/color"
+	"github.com/spf13/cobra"
+	"github.com/wux1an/wxapkg/util"
+	"golang.org/x/crypto/pbkdf2"
 )
 
 var programName = filepath.Base(os.Args[0])
@@ -237,6 +239,10 @@ func decryptFile(wxid, wxapkgPath string) []byte {
 	dataByte, err := os.ReadFile(wxapkgPath)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if runtime.GOOS == "darwin" {
+		return dataByte
 	}
 
 	dk := pbkdf2.Key([]byte(wxid), []byte(salt), 1000, 32, sha1.New)

@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 )
 
 var scanCmd = &cobra.Command{
@@ -71,6 +72,10 @@ func init() {
 
 	var homeDir, _ = os.UserHomeDir()
 	var defaultRoot = filepath.Join(homeDir, "Documents/WeChat Files/Applet")
+
+	if runtime.GOOS == "darwin" {
+		defaultRoot = filepath.Join(homeDir, "Library/Containers/com.tencent.xinWeChat/Data/.wxapplet/packages/")
+	}
 
 	scanCmd.Flags().StringP("root", "r", defaultRoot, "the mini app path")
 }
