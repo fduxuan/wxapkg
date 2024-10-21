@@ -44,6 +44,11 @@ var unpackCmd = &cobra.Command{
 
 		var allFileCount = 0
 		for _, subDir := range dirs {
+			//修改开始
+			if subDir.Name() == ".DS_Store" {
+				continue
+			}
+			//修改结束
 			subOutput := filepath.Join(output, subDir.Name())
 
 			files, err := scanFiles(filepath.Join(root, subDir.Name()))
